@@ -234,7 +234,7 @@ This matrix addition kernel adds two 1 x 8 matrices by performing 8 element wise
 
 This demonstration makes use of the `%blockIdx`, `%blockDim`, and `%threadIdx` registers to show SIMD programming on this GPU. It also uses the `LDR` and `STR` instructions which require async memory management.
 
-`matadd.asm`
+
 
 ```asm
 .threads 8
@@ -266,15 +266,7 @@ RET                            ; end of kernel
 
 # Simulation
 
-tiny-gpu is setup to simulate the execution of both of the above kernels. Before simulating, you'll need to install [iverilog](https://steveicarus.github.io/iverilog/usage/installation.html) and [cocotb](https://docs.cocotb.org/en/stable/install.html):
-
-- Install Verilog compilers with `brew install icarus-verilog` and `pip3 install cocotb`
-- Download the latest version of sv2v from https://github.com/zachjs/sv2v/releases, unzip it and put the binary in $PATH.
-- Run `mkdir build` in the root directory of this repository.
-
-Once you've installed the pre-requisites, you can run the kernel simulations with `make test_matadd` and `make test_matmul`.
-
-Executing the simulations will output a log file in `test/logs` with the initial data memory state, complete execution trace of the kernel, and final data memory state.
+Tiny-GPU is setup to simulate the execution of the above kernels.
 
 If you look at the initial data memory state logged at the start of the logfile for each, you should see the two start matrices for the calculation, and in the final data memory at the end of the file you should also see the resultant matrix.
 
@@ -282,7 +274,7 @@ Below is a sample of the execution traces, showing on each cycle the execution o
 
 ![execution trace](docs/images/trace.png)
 
-**For anyone trying to run the simulation or play with this repo, please feel free to DM me on [twitter](https://twitter.com/majmudaradam) if you run into any issues - I want you to get this running!**
+
 
 # Advanced Functionality
 
