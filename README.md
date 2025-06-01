@@ -167,7 +167,7 @@ Handles the `LDR` & `STR` instructions - and handles async wait times for memory
 
 ### PCs
 
- <img src="/docs/images/gpu.png" alt="GPU" width="48%">
+ <img src="/docs/images/pc.png" alt="GPU" width="88%">
 
 Dedicated program-counter for each unit to determine the next instructions to execute on each thread.
 
