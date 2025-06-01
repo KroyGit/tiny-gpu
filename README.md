@@ -140,6 +140,7 @@ In more advanced schedulers, techniques like **pipelining** are used to stream t
 The main constraint the scheduler has to work around is the latency associated with loading & storing data from global memory. While most instructions can be executed synchronously, these load-store operations are asynchronous, meaning the rest of the instruction execution has to be built around these long wait times.
 
 ### Fetcher
+<img src="/docs/images/instruction_fetch.png" alt="GPU" width="88%">
 
 Asynchronously fetches the instruction at the current program counter from program memory (most should actually be fetching from cache after a single block is executed).
 
@@ -148,6 +149,7 @@ Asynchronously fetches the instruction at the current program counter from progr
 Decodes the fetched instruction into control signals for thread execution.
 
 ### Register Files
+<img src="/docs/images/register.png" alt="GPU" width="88%">
 
 Each thread has it's own dedicated set of register files. The register files hold the data that each thread is performing computations on, which enables the same-instruction multiple-data (SIMD) pattern.
 
@@ -260,57 +262,7 @@ STR R7, R6                     ; store C[i] in global memory
 RET                            ; end of kernel
 ```
 
-### Matrix Multiplication
 
-The matrix multiplication kernel multiplies two 2x2 matrices. It performs element wise calculation of the dot product of the relevant row and column and uses the `CMP` and `BRnzp` instructions to demonstrate branching within the threads (notably, all branches converge so this kernel works on the current tiny-gpu implementation).
-
-`matmul.asm`
-
-```asm
-.threads 4
-.data 1 2 3 4                  ; matrix A (2 x 2)
-.data 1 2 3 4                  ; matrix B (2 x 2)
-
-MUL R0, %blockIdx, %blockDim
-ADD R0, R0, %threadIdx         ; i = blockIdx * blockDim + threadIdx
-
-CONST R1, #1                   ; increment
-CONST R2, #2                   ; N (matrix inner dimension)
-CONST R3, #0                   ; baseA (matrix A base address)
-CONST R4, #4                   ; baseB (matrix B base address)
-CONST R5, #8                   ; baseC (matrix C base address)
-
-DIV R6, R0, R2                 ; row = i // N
-MUL R7, R6, R2
-SUB R7, R0, R7                 ; col = i % N
-
-CONST R8, #0                   ; acc = 0
-CONST R9, #0                   ; k = 0
-
-LOOP:
-  MUL R10, R6, R2
-  ADD R10, R10, R9
-  ADD R10, R10, R3             ; addr(A[i]) = row * N + k + baseA
-  LDR R10, R10                 ; load A[i] from global memory
-
-  MUL R11, R9, R2
-  ADD R11, R11, R7
-  ADD R11, R11, R4             ; addr(B[i]) = k * N + col + baseB
-  LDR R11, R11                 ; load B[i] from global memory
-
-  MUL R12, R10, R11
-  ADD R8, R8, R12              ; acc = acc + A[i] * B[i]
-
-  ADD R9, R9, R1               ; increment k
-
-  CMP R9, R2
-  BRn LOOP                    ; loop while k < N
-
-ADD R9, R5, R0                 ; addr(C[i]) = baseC + i
-STR R9, R8                     ; store C[i] in global memory
-
-RET                            ; end of kernel
-```
 
 # Simulation
 
