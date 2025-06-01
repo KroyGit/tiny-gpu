@@ -1,8 +1,8 @@
 # tiny-gpu
 
-A minimal GPU implementation in Verilog optimized for learning about how GPUs work from the ground up.
+Tiny-GPU is a minimal hardware implementation of a Graphics Processing Unit (GPU) in Verilog, designed for learning its core architecture and how it handles parallel computation (SIMD) and memory access. It focuses on the fundamental components necessary to execute simple kernels, abstracting away complex graphics-specific features to highlight the general principles of modern hardware accelerators.
 
-Built with <15 files of fully documented Verilog, complete documentation on architecture & ISA, working matrix addition/multiplication kernels, and full support for kernel simulation & execution traces.
+
 
 ### Table of Contents
 
@@ -52,7 +52,6 @@ This project is primarily focused on exploring:
 2. **Parallelization** - How is the SIMD progamming model implemented in hardware?
 3. **Memory** - How does a GPU work around the constraints of limited memory bandwidth?
 
-After understanding the fundamentals laid out in this project, you can checkout the [advanced functionality section](#advanced-functionality) to understand some of the most important optimizations made in production grade GPUs (that are more challenging to implement) which improve performance.
 
 # Architecture
 
@@ -167,6 +166,8 @@ Dedicated load-store unit for each thread to access global data memory.
 Handles the `LDR` & `STR` instructions - and handles async wait times for memory requests to be processed and relayed by the memory controller.
 
 ### PCs
+
+ <img src="/docs/images/gpu.png" alt="GPU" width="48%">
 
 Dedicated program-counter for each unit to determine the next instructions to execute on each thread.
 
